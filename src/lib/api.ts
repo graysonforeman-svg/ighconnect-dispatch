@@ -33,9 +33,11 @@ export function clearAuth() {
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
     ...(init?.headers as Record<string, string>),
   };
+  if (init?.body !== undefined && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
 
   const url = `${API_URL}${path}`;

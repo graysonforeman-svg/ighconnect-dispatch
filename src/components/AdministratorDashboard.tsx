@@ -3,13 +3,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 import { CreateTestBooking } from "@/components/CreateTestBooking";
+import { UsersManagement } from "@/components/UsersManagement";
 
 type PendingDriver = {
   profile: { userId: string; vehiclePlate: string | null };
   user: { id: string; email: string } | null;
 };
 
-type Tab = "drivers" | "tools";
+type Tab = "drivers" | "users" | "tools";
 
 export function AdministratorDashboard({
   onAuthError,
@@ -91,6 +92,12 @@ export function AdministratorDashboard({
           Driver verification ({pending.length})
         </button>
         <button
+          className={tab === "users" ? "btn-primary" : "btn-secondary"}
+          onClick={() => setTab("users")}
+        >
+          Users
+        </button>
+        <button
           className={tab === "tools" ? "btn-primary" : "btn-secondary"}
           onClick={() => setTab("tools")}
         >
@@ -131,6 +138,8 @@ export function AdministratorDashboard({
           ))}
         </div>
       )}
+
+      {tab === "users" && <UsersManagement onAuthError={onAuthError} />}
 
       {tab === "tools" && (
         <div className="max-w-2xl space-y-4">

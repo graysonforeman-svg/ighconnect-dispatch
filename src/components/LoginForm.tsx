@@ -29,7 +29,7 @@ export function LoginForm({ portal }: { portal: PortalMode }) {
         user: { role: string };
       }>("/auth/login", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, portal }),
       });
       if (data.user.role !== "admin") {
         setError("Authorized staff access only");

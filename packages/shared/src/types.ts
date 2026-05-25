@@ -37,6 +37,21 @@ export interface UserPublic {
   role: UserRole;
   status: UserStatus;
   createdAt: string;
+  allowDispatchPortal?: boolean;
+  allowAdministratorPortal?: boolean;
+}
+
+/** Admin user management list item */
+export interface AdminUserRecord {
+  id: string;
+  email: string;
+  phone: string | null;
+  role: UserRole;
+  status: UserStatus;
+  allowDispatchPortal: boolean;
+  allowAdministratorPortal: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface RiderProfile {

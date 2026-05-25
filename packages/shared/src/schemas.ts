@@ -10,6 +10,28 @@ export const registerSchema = z.object({
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
+  /** Web portal being accessed (enforces per-user portal permissions). */
+  portal: z.enum(["dispatch", "administrator"]).optional(),
+});
+
+export const adminCreateUserSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  phone: z.string().optional(),
+  role: z.enum(["rider", "driver", "admin"]),
+  status: z.enum(["active", "suspended"]).default("active"),
+  allowDispatchPortal: z.boolean().optional(),
+  allowAdministratorPortal: z.boolean().optional(),
+});
+
+export const adminUpdateUserSchema = z.object({
+  email: z.string().email().optional(),
+  password: z.string().min(8).optional(),
+  phone: z.string().nullable().optional(),
+  role: z.enum(["rider", "driver", "admin"]).optional(),
+  status: z.enum(["active", "suspended"]).optional(),
+  allowDispatchPortal: z.boolean().optional(),
+  allowAdministratorPortal: z.boolean().optional(),
 });
 
 export const riderProfileSchema = z.object({

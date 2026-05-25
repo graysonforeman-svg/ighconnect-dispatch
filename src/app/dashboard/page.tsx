@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { API_URL, clearAuth, loadAuth } from "@/lib/api";
+import { api, API_URL, clearAuth, loadAuth } from "@/lib/api";
 import {
   clearPortalMode,
   getPortalMode,
@@ -40,7 +40,38 @@ export default function DashboardPage() {
     }
     const { accessToken: token } = JSON.parse(tokens) as { accessToken: string };
     setAccessToken(token);
-    setPortal(mode);
+
+    api<{
+      user: {
+        role: string;
+        allowDispatchPortal?: boolean;
+        allowAdministratorPortal?: boolean;
+      };
+    }>("/auth/me")
+      .then(({ user }) => {
+        if (user.role !== "admin") {
+          handleAuthError();
+          return;
+        }
+        if (
+          mode === "dispatch" &&
+          user.allowDispatchPortal === false
+        ) {
+          alert("Your account does not have Dispatch portal access.");
+          handleAuthError();
+          return;
+        }
+        if (
+          mode === "administrator" &&
+          user.allowAdministratorPortal === false
+        ) {
+          alert("Your account does not have Administrator portal access.");
+          handleAuthError();
+          return;
+        }
+        setPortal(mode);
+      })
+      .catch(() => handleAuthError());
   }, [router]);
 
   if (!portal || !accessToken) {
